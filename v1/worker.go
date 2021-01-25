@@ -1,4 +1,4 @@
-package duppy
+package v1
 
 import (
 	"fmt"

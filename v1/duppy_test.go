@@ -1,4 +1,4 @@
-package duppy
+package v1
 
 import (
 	"context"
@@ -27,7 +27,7 @@ func (c *CDNHit) Run() {
 	checkHead(c.URL)
 }
 
-func TestDuppy(t *testing.T) {
+/*func TestDuppy(t *testing.T) {
 	d := NewDispatcher(10)
 	d.Run()
 
@@ -40,12 +40,12 @@ func TestDuppy(t *testing.T) {
 	time.Sleep(1 * time.Second)
 	d.ShutDown()
 }
-
+*/
 func TestDuppy2(t *testing.T) {
-	d := NewDispatcher(4)
+	d := NewDispatcher(10)
 	d.Run()
 
-	for i := 1; i <= 10000; i++ {
+	for i := 1; i <= 2000; i++ {
 		job := new(CDNHit)
 		job.URL = "https://www.baidu.com"
 		d.Queue <- job

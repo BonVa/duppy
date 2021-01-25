@@ -1,6 +1,8 @@
-package duppy
+package v1
 
-import "time"
+import (
+	"time"
+)
 
 const Buffer = 20
 
