@@ -1,8 +1,8 @@
 package duppy
 
 import (
-"math"
-"sync"
+	"math"
+	"sync"
 )
 
 type scaledPool struct {
@@ -57,7 +57,6 @@ func (p *PoolGroup) findPool(size int) *scaledPool {
 	}
 	return p.pools[idx]
 }
-
 
 func (p *PoolGroup) Get(size int) *[]byte {
 	sp := p.findPool(size)

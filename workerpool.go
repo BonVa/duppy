@@ -19,12 +19,12 @@ type Job interface {
 }
 
 //worker处理任务的方法
-type WorkerFunction func (job Job) error
+type WorkerFunction func(job Job) error
 
 //worker的工作台
 type workerBench struct {
 	lastUsedTime time.Time
-	bench chan Job
+	bench        chan Job
 }
 
 //闲者入池，忙者入台 rest in the pool, work at the bench
@@ -33,21 +33,22 @@ type workerPool struct {
 	WorkerFunc WorkerFunction
 	//最大worker数量
 	MaxWorkerLimit int
-	LogAllErrors bool
+	LogAllErrors   bool
 	//最大worker空闲时长
 	WorkerMaxIdleDuration time.Duration
 	sync.Mutex
 	//已有worker数量
-	workersCount     int
+	workersCount int
 	//结束标记
-	stop             bool
+	stop bool
 	//池中worker数量，也就是空闲的worker数量
-	inThePool        []*workerBench
+	inThePool []*workerBench
 	//整个worker池的停止信号，该信号的出现意味着要1，结束池子的goroutine；2，结束所有worker的goroutine（需要等待worker手头的工作完成，平滑结束）
-	stopSign         chan struct{}
+	stopSign chan struct{}
 	//工作台复用池，与其一直在销毁和创建工作台（worker），不如用sync.pool复用起来，让空闲的worker可以把工作台让出来
 	workerBenchCache sync.Pool
 }
+
 //todo::解释
 var workerBenchSize = func() int {
 	if runtime.GOMAXPROCS(0) == 1 {
@@ -72,7 +73,7 @@ func (wp *workerPool) Start() {
 	}
 	//并发地去做这件事：
 	go func() {
-		var  recycle []*workerBench
+		var recycle []*workerBench
 		for {
 			//清空空闲超时的worker
 			wp.clean(&recycle)
@@ -136,9 +137,9 @@ func (wp *workerPool) clean(recycle *[]*workerBench) {
 	inPool := wp.inThePool
 	n := len(inPool)
 	//待我二分便知汝等闲人谁的蛋实在太疼
-	l, r, mid := 0, n - 1, 0
+	l, r, mid := 0, n-1, 0
 	for l <= r {
-		mid = l + (r - l)>>1
+		mid = l + (r-l)>>1
 		if breaking.After(wp.inThePool[mid].lastUsedTime) {
 			l = mid + 1
 		} else {
@@ -163,7 +164,7 @@ func (wp *workerPool) clean(recycle *[]*workerBench) {
 	//问题就解决了吗？ 没有，那些超时worker依然存在cpu上，那么接下来我们要做的就是对他们进行真正的回收
 	//这里你好不好奇，为什么不直接range &recycle，底层指向同一个slice，这个变量有何必要呢？
 	//答案，如果不用tmp，代码可读性很差  like : (*recycle)[i].bench <- nil
-	tmp :=  *recycle
+	tmp := *recycle
 	for i := range tmp {
 		//工人在台上接收到nil的时候就知道自己可以takes a break了
 		tmp[i].bench <- nil
