@@ -7,7 +7,7 @@ Duppy has a "dispatcher and worker" pattern (no disrespect, please think of it a
 import "github.com/BonVa/duppy"
 
 func main() {
-  dMaster := Duppy.Master(config) //a map, or just put a nil map, it will create an default master who has 10 workers
+  dMaster := Duppy.Start(config) //a map, or just put a nil map, it will create an default master who has 10 workers
   
   // as a web server r as a consumer
   dMaster.Listen(jobSocket) // from MQ, channel or raw network socket
