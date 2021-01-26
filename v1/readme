@@ -1,0 +1,3 @@
+Version 1 of duppy is a basic design. It has a dispatcher and some workers, which combined as a fix-size pool. (no LRU).
+It's used in my project and also in some simple work tasks. 
+No promise of its safety or ability, but you can use it as a case study. It will be a good start.
