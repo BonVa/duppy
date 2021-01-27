@@ -8,11 +8,15 @@ import (
 )
 
 // noticed:
-//	this package is a study case from fasthttp/workerpool.go
+//	this package is a study case from fasthttp/workerpool.go, and some code has been modified
 //	use the actual fasthttp/workerpool.go instead of my study case
 //	comments will be Chinese and English mixed, don't read them
+//  在这个学习案例中，真正池化的对象并非worker，而是工作台，任务需要放置到工作台上，才会有"工人"去执行
+//  至于工人怎么执行，并不关心
+//  管理的对象其实是channel
+//  暂时觉得这个设计相对来说比较清晰，但不是特别抽象
 
-//worker接收的任务体结构
+//worker接收的任务体结构, you don't have this in the origin
 type Job interface {
 	Run(params interface{}) error
 	// if context is needed, you can include the context
