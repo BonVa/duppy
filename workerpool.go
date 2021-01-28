@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// warning: 
+//	this piece of code has bugs, don't use this.
 // noticed:
 //	this package is a study case from fasthttp/workerpool.go, and some code has been modified
 //	use the actual fasthttp/workerpool.go instead of my study case
